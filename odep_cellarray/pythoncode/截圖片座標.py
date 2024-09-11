@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-
+import os
 def main():
     # 隱藏主 tkinter 視窗
     Tk().withdraw()
@@ -50,9 +50,14 @@ def main():
     cropped = image[y:y+h, x:x+w].copy()
     
     # 顯示裁剪後的圖像
-    cv2.imshow('Cropped Image', cropped)
+    cv2.namedWindow('Image win', cv2.WINDOW_NORMAL)
+    cv2.imshow('Image Win', cropped)
+
+    cv2.imwrite('croppedimage.png',cropped)
+
     cv2.waitKey(0)  # 等待按鍵
     cv2.destroyAllWindows()  # 關閉所有窗口
+    
     
     # 計算四個角的座標
     top_left = (x, y)

@@ -71,7 +71,5 @@ def main():
             print("截圖數量:",number)
             break
 
-
-
 if __name__ == "__main__":
     main()

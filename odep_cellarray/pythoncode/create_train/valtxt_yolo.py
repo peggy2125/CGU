@@ -19,18 +19,18 @@ def create_file_list(selected_folder, file_type):
         print("所选文件夹中没有找到图片。")
         return
     
-    # 生成相对路径
-    relative_paths = [os.path.relpath(os.path.join(selected_folder, img), start=os.path.dirname(selected_folder)) for img in images]
+    # 生成绝对路径
+    absolute_paths = [os.path.join(selected_folder, img) for img in images]
     
     # 确定保存的文件名
     file_name = f"{file_type}.txt"
     
     # 将路径写入文本文件
     with open(os.path.join(selected_folder, file_name), 'w') as f:
-        for path in relative_paths:
+        for path in absolute_paths:
             f.write(f"{path}\n")
     
-    print(f"{file_name} 已创建，包含 {len(relative_paths)} 张图片的路径。")
+    print(f"{file_name} 已创建，包含 {len(absolute_paths)} 张图片的路径。")
 
 def main():
     # 选择要创建的文件类型

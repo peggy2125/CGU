@@ -1,14 +1,27 @@
 import json
 import os
 import glob
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 
-# 設定輸入和輸出路徑
-input_dir = 'D:\\path_to_your_labelme_json_files'  # JSON檔案所在資料夾
-output_dir = 'D:\\path_to_your_yolo_labels'  # 輸出YOLO格式標註檔案的資料夾
+# 隱藏主視窗
+Tk().withdraw()
+
+# 選擇輸入資料夾
+input_dir = askdirectory(title="選擇Labelme JSON檔案所在資料夾")
+if not input_dir:
+    print("未選擇輸入資料夾，程序結束。")
+    exit()
+
+# 選擇輸出資料夾
+output_dir = askdirectory(title="選擇YOLO標註檔案輸出資料夾")
+if not output_dir:
+    print("未選擇輸出資料夾，程序結束。")
+    exit()
 
 # 定義類別對應字典
 class_labels = {
-    'your_class_name': 0,  # 根據您的類別名稱修改
+    'target': 0,  # 根據您的類別名稱修改
     # 可以添加更多類別
 }
 
@@ -46,3 +59,5 @@ if __name__ == '__main__':
     json_files = glob.glob(os.path.join(input_dir, '*.json'))  # 獲取所有JSON檔案
     for json_file in json_files:
         decode_json(input_dir, os.path.basename(json_file))
+    
+    print("轉換完成！")

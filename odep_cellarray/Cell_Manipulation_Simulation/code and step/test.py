@@ -26,7 +26,7 @@ def moving_circle(radius, height, frames):
     cv2.destroyAllWindows()
 
 # 使用範例
-radius = 10      # 圓的半徑
+radius = 5      # 圓的半徑
 frames = 100     # 總幀數
 height = 10      # 每幀向上移動的高度
 

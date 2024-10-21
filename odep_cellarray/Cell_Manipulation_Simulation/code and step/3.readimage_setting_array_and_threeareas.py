@@ -62,8 +62,9 @@ if __name__ == '__main__':
     cv2.imshow('3 area of chip', arrayimage_with_area)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    save_directory=os.path.dirname(file_path)
-    array_image_path = os.path.join(save_directory, f'arrayimage_{file_name}.png')
-    area_image_path = os.path.join(save_directory, f'3_area_of_chip_{file_name}.png')
+    save_arrayimage_directory="D:\\CGU\\odep_cellarray\\Cell_Manipulation_Simulation\\virtual_test_image\\array_image"
+    save_areaimage_directory="D:\\CGU\\odep_cellarray\\Cell_Manipulation_Simulation\\virtual_test_image\\3 area範例"
+    array_image_path = os.path.join(save_arrayimage_directory, f'arrayimage_{file_name}')
+    area_image_path = os.path.join(save_areaimage_directory, f'3_area_of_chip_{file_name}')
     cv2.imwrite(array_image_path, arrayimage)
     cv2.imwrite(area_image_path , arrayimage_with_area)

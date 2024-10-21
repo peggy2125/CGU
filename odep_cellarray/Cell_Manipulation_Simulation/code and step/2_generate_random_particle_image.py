@@ -10,7 +10,7 @@ def create_canvas_and_draw_circles(output_folder, radius,file_i):
     canvas_width = 1442
     canvas_height = 1080
     canvas = np.zeros((canvas_height, canvas_width, 3), dtype=np.uint8)
-    output_txt_path='D:\\CGU\\odepcellarray\\Cell Manipulation Simulation\\virtual_particle_points(對應)'
+    output_txt_path='D:\\CGU\\odepcellarray\\Cell_Manipulation_Simulation\\virtual_particle_points(對應)'
     # 隨機生成 20 個點座標
     points = []
     for _ in range(20):

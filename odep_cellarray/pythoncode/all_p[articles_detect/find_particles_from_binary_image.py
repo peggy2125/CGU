@@ -79,7 +79,7 @@ def find_circles_from_binary(image_path, output_txt_path):
                                dp=1, 
                                minDist=10, 
                                param1=50, 
-                               param2=4,  # 调整 param2 以适应检测精度
+                               param2=4.5,  # 调整 param2 以适应检测精度
                                minRadius=4, 
                                maxRadius=6)
     
@@ -114,10 +114,18 @@ def find_circles_from_binary(image_path, output_txt_path):
         print("No circles found.")
 
 
-image_path = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\IMAGE\\2024.09.19_001.png"
+# Set the directory containing your files
+directory = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\IMAGE"
+# # Get a list of all tiff files
+num=0
+files = [f for f in os.listdir(directory) if f.endswith('.png')]
+for image in files:
+    num+=1
+    image_path = os.path.join(directory, image)
+    print(num)
+    base_filename = os.path.splitext(os.path.basename(image_path))[0]  # 去掉扩展名
+    output_folder = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\FIND_CPARTICLES_TXT"
+    output_txt_path = os.path.join(output_folder, base_filename)  # 指定输出路径
+    find_circles_from_binary(image_path, output_txt_path)
 
-# 输出文本路径
-output_txt_path = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\FIND_CPARTICLES_TXT\\detected_circles.txt"
 
-# 检测圆并保存圆心到TXT文件
-find_circles_from_binary(image_path, output_txt_path)

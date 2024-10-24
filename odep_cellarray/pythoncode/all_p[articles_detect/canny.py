@@ -15,27 +15,24 @@ def process_image(image_path):
     dim = (width, height)
     kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
     start_time = time.time()
-    
+ 
     # Apply Gaussian blur to smooth the image
     blurred = cv2.GaussianBlur(image, (5, 5), 0)
-
     # Apply threshold
-    _, binary = cv2.threshold(blurred, 75, 255, cv2.THRESH_BINARY)
+    _, binary = cv2.threshold(blurred, 75, 255, cv2.THRESH_BINARY_INV)
     #binary = cv2.adaptiveThreshold(bg_sub, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 3, 2)
        # 缩放图像
-    binary_resized = cv2.resize(binary, dim, interpolation=cv2.INTER_AREA)
-
+    morphology = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+    morphology_resized = cv2.resize(morphology, dim, interpolation=cv2.INTER_AREA)
     # 显示缩放后的图像
-    cv2.imshow('resized_binary', binary_resized)
+    cv2.imshow('resized_binary', morphology_resized)
 
-
- 
     end_time = time.time()
     dif_time = end_time - start_time
     print(dif_time)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    return binary
+    return morphology
 
 # Set the directory containing your files
 directory = "D:/CGU/odep_cellarray/gray_whole_rawimage_and_json"

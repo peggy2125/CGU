@@ -1,19 +1,27 @@
 import json
 import os
 import numpy as np
+import pandas as pd
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 
 def load_json(json_path):
     with open(json_path, 'r') as f:
         data = json.load(f)
     return data
 
+
 def load_txt(txt_path):
-    circles = []
+    centers = []
     with open(txt_path, 'r') as f:
         for line in f:
-            x, y = map(float, line.strip().split(','))
-            circles.append((x, y))
-    return circles
+            # 通过字符串拆分提取圆心
+            if "Center" in line:
+                parts = line.split("Center: (")[1].split("), Radius:")[0]
+                x, y = map(int, parts.split(", "))  # 提取x和y并转换为整数
+                centers.append((x, y))
+    return centers
+
 
 def is_point_in_circle(px, py, cx, cy, radius):
     return (px - cx) ** 2 + (py - cy) ** 2 <= radius ** 2
@@ -49,21 +57,42 @@ def compare_circles(json_path, txt_path):
             txt_in_json_count += 1
         else:
             txt_not_in_json_count += 1
-
+    filename = os.path.splitext(os.path.basename(json_path))[0]
     json_missed_count = len(json_circles) - sum(checked_json)
 
-    print(f"JSON circles: {len(json_circles)}")
-    print(f"TXT circles: {len(txt_circles)}")
-    print(f"Correctly matched circles: {txt_in_json_count}")
-    print(f"TXT circles not in JSON: {txt_not_in_json_count}")
-    print(f"JSON circles missed in TXT: {json_missed_count}")
+    return {
+        'filename': filename,
+        'JSON circles': len(json_circles),
+        'TXT circles': len(txt_circles),
+        'Correctly matched circles': txt_in_json_count,
+        'TXT circles not in JSON': txt_not_in_json_count,
+        'JSON circles missed in TXT': json_missed_count
+    }
+    
 
-# Example usage
-json_folder = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\json"
-txt_folder = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\FIND_CPARTICLES_TXT"
-filename = "2024.09.19_001"  # without extension
+    
 
-json_path = os.path.join(json_folder, f"{filename}.json")
-txt_path = os.path.join(txt_folder, f"{filename}.txt")
 
-compare_circles(json_path, txt_path)
+# main
+Tk().withdraw() 
+# 打開文件對話框以選擇資料夾
+#json_folder = askdirectory(title="選擇樣比對的json檔資料夾")
+txt_folder = askdirectory(title="選擇樣比對的txt檔資料夾")
+json_folder = "D:/CGU/odep_cellarray/detecting_testing_data/binaryimage_and_json/json"
+#txt_folder = "D:/CGU/odep_cellarray/detecting_testing_data/binaryimage_and_json/binary_threshold(75)/FIND_CPARTICLES_TXT"
+output_excel_path= askdirectory(title="選擇輸出excel資料夾")
+files = [f for f in os.listdir(json_folder) if f.endswith('.json')]
+
+results = []
+for file in files:
+    json_path = os.path.join(json_folder, file)
+    base_filename = os.path.splitext(os.path.basename(json_path))[0]
+    print(base_filename)
+    txt_path = os.path.join(txt_folder, base_filename)
+    output_excel = (f"{output_excel_path}_compareresult.xlsx")
+    result=compare_circles(json_path, txt_path)
+    results.append(result)
+        # 将结果导出为 Excel 文件
+    df = pd.DataFrame(results)
+    df.to_excel(output_excel, index=False)
+    print(f"Results saved to {output_excel}")

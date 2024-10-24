@@ -22,7 +22,8 @@ def process_image(image_path):
     _, binary = cv2.threshold(blurred, 75, 255, cv2.THRESH_BINARY_INV)
     #binary = cv2.adaptiveThreshold(bg_sub, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 3, 2)
        # 缩放图像
-    morphology = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+    #morphology = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+    morphology = cv2.dilate(binary, kernel, iterations=1)
     morphology_resized = cv2.resize(morphology, dim, interpolation=cv2.INTER_AREA)
     # 显示缩放后的图像
     cv2.imshow('resized_binary', morphology_resized)
@@ -35,7 +36,7 @@ def process_image(image_path):
     return morphology
 
 # Set the directory containing your files
-directory = "D:/CGU/odep_cellarray/gray_whole_rawimage_and_json"
+directory = "D:/CGU/odep_cellarray/detecting_testing_data/gray_whole_rawimage_and_json"
 # # Get a list of all tiff files
 num=0
 files = [f for f in os.listdir(directory) if f.endswith('.png')]
@@ -45,7 +46,7 @@ for image in files:
     print(num)
     binary=process_image(image_path)
     base_filename = os.path.basename(image_path)  # 获取原文件名
-    output_folder = "D:\\CGU\\odep_cellarray\\binaryimage_and_json\\binary_threshold(75)"
+    output_folder = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\IMAGE"
     output_path = os.path.join(output_folder, base_filename)  # 指定输出路径
     cv2.imwrite(output_path, binary)  # 保存图像
     print(f"Saved resized image to {output_path}")

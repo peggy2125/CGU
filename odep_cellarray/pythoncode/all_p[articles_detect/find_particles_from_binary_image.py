@@ -30,7 +30,7 @@ def find_circles_from_binary(image_path, output_txt_path):
                                dp=1, 
                                minDist=10, 
                                param1=50, 
-                               param2=6,  # 调整 param2 以适应检测精度
+                               param2=12,  # 调整 param2 以适应检测精度
                                minRadius=4, 
                                maxRadius=6)
     

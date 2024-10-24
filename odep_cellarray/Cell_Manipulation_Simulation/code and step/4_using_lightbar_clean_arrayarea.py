@@ -25,40 +25,43 @@ img = cv2.imread(image_path)
 if img is None:
     raise ValueError("無法讀取圖片，請檢查路徑。")
 
-# 獲取紅色圓形的位置（假設紅色圓形是純紅色）
+# 獲取紅色圓形的位置（模擬detection）
 circles = []
 for y in range(1080):
     for x in range(1442):
         if (img[y, x, 2] == 255) and (img[y, x, 1] == 0) and (img[y, x, 0] == 0):
             circles.append((x, y))
-
-
 for circle in circles:
-    circle_x, circle_y = circle
-    if circle_x <= 2 * size and circle_y <= 2 * size:
-        bad_circle.append(circle)
-
-for circle in bad_circle:
-    cv2.circle(img, circle, 5, (0, 0, 0), -1)  
-      
+        circle_x, circle_y = circle
+        if circle_x <= 2 * size and circle_y <= 2 * size:
+            bad_circle.append(circle)
+            
 # 設定長條的初始位置和速度
 bar_x_position = width + 10  # 初始位置在右側
 speed = 3  # 每幀移動的像素數
 
-
+canvas = np.zeros((1080, 1442, 3), dtype=np.uint8)
+# 繪製四個正方形
+for i in range(2):
+    for j in range(2):
+        top_left = (i * size, j * size)  # 左上角座標
+        bottom_right = (top_left[0] + size, top_left[1] + size)  # 右下角座標
+        
+        # 繪製虛線正方形
+        cv2.rectangle(canvas, top_left, bottom_right, (255, 191, 0), 2)
 
 # 模擬運動並顯示圖像
 while len(bad_circle)!=0:
     # 創建一個複製的圖像來進行繪製
-    display_img = img.copy()
+    display_img = canvas.copy()
     number+=1
     # 繪製白色長條
     cv2.rectangle(display_img, (bar_x_position, 0), (bar_x_position + bar_width, bar_height), (255, 255, 255), thickness=cv2.FILLED)
-    bad_circle=[]
+    '''bad_circle=[]
     for circle in circles:
         circle_x, circle_y = circle
         if circle_x <= 2 * size and circle_y <= 2 * size:
-            bad_circle.append(circle)
+            bad_circle.append(circle)'''
     # 檢查 bad_circle 中的所有圓形是否碰到長條邊緣
     for circle in bad_circle:
         circle_x, circle_y = circle
@@ -71,12 +74,13 @@ while len(bad_circle)!=0:
             # 更新圓形位置並保存圖像
             update_circle_coordinate = (new_circle_x, circle_y)
             circles.remove(circle)  # 從原始列表中移除圓形
+            bad_circle.remove(circle)
             circles.append(update_circle_coordinate)  # 將更新後的位置添加回列表中
-            
+            bad_circle.append (update_circle_coordinate)
             #moved_circles_images.append(moved_circle_img)  # 保存被移動的圓形圖像
 
     # 繪製紅色圓形((不知道為什麼會被疊加))
-    for circle in bad_circle:
+    for circle in circles:
         cv2.circle(display_img, circle, 1, (0, 0, 255), -1)
 
     # 更新長條位置向左移動

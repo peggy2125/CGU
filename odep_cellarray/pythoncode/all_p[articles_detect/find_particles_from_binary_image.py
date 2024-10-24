@@ -63,6 +63,9 @@ def find_circles_from_binary(image_path, output_txt_path):
         cv2.destroyAllWindows()
     else:
         print("No circles found.")
+        with open(output_txt_path, "w") as f:
+            pass        
+        print(f"Circles saved to {output_txt_path}")
 
 
 Tk().withdraw()
@@ -72,7 +75,7 @@ directory = askdirectory(title="選擇含有png檔的資料夾")
 # 打開文件對話框以選擇資料夾
 output_txt_folder = askdirectory(title="選擇要存放txt的資料夾")
 # Set the directory containing your files
-#directory = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\binaryimage_and_json\\binary_threshold(75)\\IMAGE"
+#directory = "D:\\CGU\\odep_cellarray\\detecting_testing_data\\gray_whole_rawimage_and_json\\2024.09.18_024.png"
 # # Get a list of all tiff files
 num=0
 files = [f for f in os.listdir(directory) if f.endswith('.png')]

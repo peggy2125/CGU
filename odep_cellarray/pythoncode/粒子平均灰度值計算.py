@@ -122,7 +122,22 @@ def process_image_for_circles(json_path, img_path):
             circle_num += 1
     return results
 
+# Function to split data into chunks for saving in separate files
+def save_to_multiple_files(all_results, folder_path, max_rows=1000000):
+    total_rows = len(all_results)
+    file_count = 1
 
+    # Loop through the data and save it in chunks
+    for i in range(0, total_rows, max_rows):
+        chunk = all_results[i:i + max_rows]  # Get a chunk of data
+        output_path = os.path.join(folder_path, f"circle_grayscale_values_part_{file_count}.xlsx")
+
+        # Save the chunk to an Excel file
+        df = pd.DataFrame(chunk)
+        df.to_excel(output_path, index=False, header=False)
+        print(f"Part {file_count} saved to {output_path}")
+        file_count += 1
+        
 # Main function to drive the program
 def main():
     # 隐藏主 tkinter 窗口
@@ -154,15 +169,10 @@ def main():
             else:
                 print(f"Image file not found for {file_name}")
 
-    # 将结果输出到 Excel
+# 将结果均分成多个文件输出
     if all_results:
-        output_path = "D:\\CGU\\odep_cellarray\\circle_grayscale_values.xlsx"
-        # 使用 pandas 将数据保存为 Excel 文件
-        df = pd.DataFrame(all_results)
-        df.to_excel(output_path, index=False, header=False)
-        print(f"Results saved to {output_path}")
+        save_to_multiple_files(all_results, "D:\\CGU\\odep_cellarray")
     else:
         print("No valid results to save.")
-
 if __name__ == "__main__":
     main()
